@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Laravel中的Excel | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Laravel Excel 在 Laravel 5 中集成 PHPOffice 套件中的 PHPExcel ，从而方便我们以优雅的、富有表现力的代码实现Excel&#x2F;CSV文件的导入和 导出 。该项目的GitHub地址是： https:&#x2F;&#x2F;github.com&#x2F;Maatwebsite&#x2F;Laravel-Excel 。本文我们将在Laravel中使用Laravel Excel简单实现Excel文件的导入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel中的Excel">
+<meta property="og:url" content="http:&#x2F;&#x2F;aidie.github.io&#x2F;2016&#x2F;09&#x2F;08&#x2F;laravelExecl&#x2F;index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Laravel Excel 在 Laravel 5 中集成 PHPOffice 套件中的 PHPExcel ，从而方便我们以优雅的、富有表现力的代码实现Excel&#x2F;CSV文件的导入和 导出 。该项目的GitHub地址是： https:&#x2F;&#x2F;github.com&#x2F;Maatwebsite&#x2F;Laravel-Excel 。本文我们将在Laravel中使用Laravel Excel简单实现Excel文件的导入">
+<meta property="og:image" content="http:&#x2F;&#x2F;oe2qf8as1.bkt.clouddn.com&#x2F;854F.tm.png">
+<meta property="article:published_time" content="2016-09-07T17:57:23.000Z">
+<meta property="article:modified_time" content="2019-12-12T08:20:14.654Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Laravel">
+<meta property="article:tag" content="Excel">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;oe2qf8as1.bkt.clouddn.com&#x2F;854F.tm.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+      
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+<meta name="generator" content="Hexo 4.1.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/head.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/" title="Hi Mate">John Doe</a></h1>
+        </hgroup>
+
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/works">作品展示</a></li>
+                        
+                            <li><a href="/about">留言打卡</a></li>
+                        
+                            <li><a href="/FrontEndGuide">前端导航</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=PAkNDgsKBQ4MCnxNTRJfU1E" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/chailong" title="github">github</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Excel/" style="font-size: 10px;">Excel</a> <a href="/tags/Laravel/" style="font-size: 10px;">Laravel</a> <a href="/tags/css/" style="font-size: 10px;">css</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="https://zxuhang.github.io/">赵旭航的前端</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">纯海迷、爱运动、爱交友、爱旅行、喜欢接触新鲜事物、迎接新的挑战，更爱游离于错综复杂的编码与逻辑中</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">John Doe</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/head.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="Me">John Doe</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/works">作品展示</a></li>
+                
+                    <li><a href="/about">留言打卡</a></li>
+                
+                    <li><a href="/FrontEndGuide">前端导航</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=PAkNDgsKBQ4MCnxNTRJfU1E" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/chailong" title="github">github</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-laravelExecl" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/08/laravelExecl/" class="article-date">
+      <time datetime="2016-09-07T17:57:23.000Z" itemprop="datePublished">2016-09-08</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Laravel中的Excel
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Laravel%E5%A5%87%E6%B7%AB%E6%8A%80%E5%B7%A7/">Laravel奇淫技巧</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Excel/" rel="tag">Excel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Laravel/" rel="tag">Laravel</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>Laravel Excel 在 Laravel 5 中集成 PHPOffice 套件中的 PHPExcel ，从而方便我们以优雅的、富有表现力的代码实现Excel/CSV文件的导入和 导出 。<br>该项目的GitHub地址是： <a href="https://github.com/Maatwebsite/Laravel-Excel" target="_blank" rel="noopener">https://github.com/Maatwebsite/Laravel-Excel</a> 。<br>本文我们将在Laravel中使用Laravel Excel简单实现Excel文件的导入和导出</p>
+<h1 id="安装-amp-配置"><a href="#安装-amp-配置" class="headerlink" title="安装&amp;配置"></a>安装&amp;配置</h1><p>使用Composer安装依赖<br>首先在Laravel项目根目录下使用Composer安装依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer require maatwebsite&#x2F;excel ~2.0.0</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>安装后的设置<br>在 config/app.php 中注册服务提供者到 providers 数组：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Maatwebsite\Excel\ExcelServiceProvider::class,</span><br></pre></td></tr></table></figure>
+
+<p>同样在 config/app.php 中注册门面到 aliases 数组：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#39;Excel&#39; &#x3D;&gt; Maatwebsite\Excel\Facades\Excel::class,</span><br></pre></td></tr></table></figure>
+
+<p>如果想要对Laravel Excel进行更多的自定义配置，执行如下Artisan命令，执行成功后会在 config 目录下生成一个配置文件 excel.php 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan vendor:publish</span><br></pre></td></tr></table></figure>
+
+<h1 id="导出Excel文件"><a href="#导出Excel文件" class="headerlink" title="导出Excel文件"></a>导出Excel文件</h1><p>为了演示Laravel Excel相关功能，我们为本测试创建一个干净的控制器 ExcelController.php ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:controller ExcelController --plain</span><br></pre></td></tr></table></figure>
+
+<p>然后在 web.php 中定义相关路由：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$router-&gt;get(&#39;excel&#x2F;export&#39;,&#39;ExcelController@export&#39;);</span><br><span class="line">$router-&gt;get(&#39;excel&#x2F;import&#39;,&#39;ExcelController@import&#39;);</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">namespace App\Http\Controllers\Api;</span><br><span class="line">use DB;</span><br><span class="line">use Excel;</span><br><span class="line">use App\Http\Controllers\Controller;</span><br><span class="line">use Illuminate\Http\Request;</span><br><span class="line">class ExcelController extends Controller</span><br><span class="line">&#123;</span><br><span class="line">	&#x2F;&#x2F;Excel文件导出功能</span><br><span class="line">	public function export()</span><br><span class="line">	&#123;</span><br><span class="line">	$info &#x3D; DB::table(&#39;tableName&#39;)-&gt;get();</span><br><span class="line">	$cellData &#x3D; [</span><br><span class="line">		[&#39;共&#39;.count($info).&#39;条&#39;],</span><br><span class="line">		[&#39; &#39;, &#39;colName1&#39;, &#39;colName2&#39;, &#39;colName3&#39;, &#39;colName4&#39;],</span><br><span class="line">	];</span><br><span class="line">	foreach ($info as $k &#x3D;&gt; $v) &#123;</span><br><span class="line">		$count  &#x3D; DB::table(&#39;tableName&#39;)-&gt;count();</span><br><span class="line">		$get    &#x3D; DB::table(&#39;tableName&#39;)-&gt;select(DB::raw(&#39;SUM(jifen) as tableName&#39;))-&gt;first();</span><br><span class="line">		$out    &#x3D; DB::table(&#39;tableName&#39;)-&gt;select(DB::raw(&#39;SUM(jifen) as tableName&#39;))-&gt;first();</span><br><span class="line">		$cellData[$k + 2][] &#x3D; $k + 1;</span><br><span class="line">	&#125;</span><br><span class="line">	Excel::create(&#39;ExcelName&#39;, function ($excel) use ($cellData) &#123;</span><br><span class="line">		$excel-&gt;sheet(&#39;score&#39;, function ($sheet) use ($cellData) &#123;</span><br><span class="line">			$sheet-&gt;rows($cellData);</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;)-&gt;export(&#39;xls&#39;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们在浏览器中访问 <a href="http://localhost:8000/excel/export" target="_blank" rel="noopener">http://localhost:8000/excel/export</a> ，会导出一个名为 ExcelName.xls 的Excel文件：</p>
+<p><img src="http://oe2qf8as1.bkt.clouddn.com/854F.tm.png" alt="111"></p>
+<p>如果你要导出csv或者xlsx文件，只需将 export 方法中的参数改成csv或xlsx即可。<br>如果还要将该Excel文件保存到服务器上，可以使用 store 方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Excel::create(&#39;ExcelName&#39;,function($excel) use ($cellData)&#123;</span><br><span class="line">     $excel-&gt;sheet(&#39;score&#39;, function($sheet) use ($cellData)&#123;</span><br><span class="line">         $sheet-&gt;rows($cellData);</span><br><span class="line">     &#125;);</span><br><span class="line">&#125;)-&gt;store(&#39;xls&#39;)-&gt;export(&#39;xls&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>文件默认保存到 storage/exports 目录下，如果出现文件名中文乱码，将上述代码文件名做如下修改即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iconv(&#39;UTF-8&#39;, &#39;GBK&#39;, &#39;ExcelName&#39;)</span><br></pre></td></tr></table></figure>
+
+<h1 id="导入Excel文件"><a href="#导入Excel文件" class="headerlink" title="导入Excel文件"></a>导入Excel文件</h1><p>我们将刚才保存到服务器上的Excel文件导入进来，导入很简单，使用 Excel 门面上的 load 方法即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Excel文件导入功能  </span><br><span class="line">public function import()&#123;</span><br><span class="line">    $filePath &#x3D; &#39;storage&#x2F;exports&#x2F;&#39;.iconv(&#39;UTF-8&#39;, &#39;GBK&#39;, &#39;ExcelName&#39;).&#39;.xls&#39;;</span><br><span class="line">    Excel::load($filePath, function($reader) &#123;</span><br><span class="line">        $data &#x3D; $reader-&gt;all();</span><br><span class="line">        dd($data);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>load 方法基于项目根路径作为根目录，同样我们对中文进行了转码，否则会提示文件不存在。<br>在浏览器中访问 <a href="http://localhost:8000/excel/import" target="_blank" rel="noopener">http://localhost:8000/excel/import</a> ，页面显示如下：</p>
+<p>当然，Laravel Excel还有很多其它功能，比如将Blade视图导出为Excel或CSV，以及对导入/导出更加细粒度的控制，具体可参考其官方文档： <a href="http://www.maatwebsite.nl/laravel-excel/docs" target="_blank" rel="noopener">http://www.maatwebsite.nl/laravel-excel/docs</a></p>
+
+      
+      
+        <div class="page-reward">
+          <p><a href="javascript:void(0)" onclick="dashangToggle()" class="dashang">赏</a></p>
+          <div class="hide_box"></div>
+          <div class="shang_box">
+            <a class="shang_close" href="javascript:void(0)" onclick="dashangToggle()">×</a>
+            <div class="shang_tit">
+              <p>纯属好玩</p>
+            </div>
+            <div class="shang_payimg">
+              <img src="/img/alipayimg.jpg" alt="扫码支持" title="扫一扫" />
+            </div>
+              <div class="pay_explain">扫码打赏，你说多少就多少</div>
+            <div class="shang_payselect">
+              
+                <div class="pay_item checked" data-id="alipay">
+                  <span class="radiobox"></span>
+                  <span class="pay_logo"><img src="/img/alipay.png" alt="支付宝" /></span>
+                </div>
+              
+              
+                <div class="pay_item" data-id="wechat">
+                  <span class="radiobox"></span>
+                  <span class="pay_logo"><img src="/img/weixin.png" alt="微信" /></span>
+                </div>
+              
+            </div>
+            <div class="shang_info">
+              <p>打开<span id="shang_pay_txt">支付宝</span>扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+        <script type="text/javascript">
+          $(".pay_item").click(function(){
+            $(this).addClass('checked').siblings('.pay_item').removeClass('checked');
+            var dataid=$(this).attr('data-id');
+            $(".shang_payimg img").attr("src","/img/"+dataid+"img.jpg");
+            $("#shang_pay_txt").text(dataid=="alipay"?"支付宝":"微信");
+          });
+          function dashangToggle(){
+            
+            $(".hide_box").fadeToggle();
+            $(".shang_box").fadeToggle();
+          }
+        </script>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2016/09/08/laravelExecl/">Laravel中的Excel</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 John Doe 的个人博客">John Doe</a></p>
+        <p><span>发布时间:</span>2016年09月08日 - 01时57分</p>
+        <p><span>最后更新:</span>2019年12月12日 - 16时20分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2016/09/08/laravelExecl/" title="Laravel中的Excel">http://aidie.github.io/2016/09/08/laravelExecl/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://aidie.github.io/2016/09/08/laravelExecl/　　作者: John Doe" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+  
+    <a href="/2016/08/13/hexoInstall/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">hexo折腾日记</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#安装-amp-配置"><span class="toc-number">1.</span> <span class="toc-text">安装&amp;配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#导出Excel文件"><span class="toc-number">2.</span> <span class="toc-text">导出Excel文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#导入Excel文件"><span class="toc-number">3.</span> <span class="toc-text">导入Excel文件</span></a></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <div id="gitments"></div>
+<script src="/js/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+      id: window.location.pathname,
+      owner: 'luuman',
+      repo: 'luuman.github.io',
+      oauth: {
+        client_id: '',
+        client_secret: '',
+      },
+    })
+    gitment.render('gitments')
+</script>
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/2016/08/13/hexoInstall/" title="下一篇: hexo折腾日记">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/09/08/laravelExecl/">Laravel中的Excel</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/08/13/hexoInstall/">hexo折腾日记</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/10/21/laravelExecl%20-%20%E5%89%AF%E6%9C%AC/">辨析 Sass 中的 Map 和 List</a></li></ul>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2019 John Doe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</script
+</footer>
+
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>
